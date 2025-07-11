@@ -24,7 +24,7 @@ const config = {
                 x: 0,
                 y: 150,
             },
-            debug: true,
+            debug: false,
         },
     },
     scene: [Boot, Preloader, MainMenu, ClickerGame, GameOver],

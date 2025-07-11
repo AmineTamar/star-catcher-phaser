@@ -110,7 +110,7 @@ this.object2Counter =0;
         this.catcher.body.enable = false;
 
         this.speed = 50;
-        this.spawnDelay = 300;
+        this.spawnDelay = 400;
 
         this.spawnTimer = this.time.addEvent({
             delay: this.spawnDelay,
@@ -145,7 +145,7 @@ this.timerEvent = this.time.addEvent({
     spawnTrail(target) {
         const trail = this.add
             .image(target.x, target.y, "trail")
-            .setAlpha(0.8)
+            .setAlpha(0.5)
             .setScale(0.8)
             .setTint(0xffffaa)
             .setDepth(0);
@@ -173,25 +173,28 @@ this.timerEvent = this.time.addEvent({
         }
 
         this.objectGroup.getChildren().forEach((child) => {
-            if (!child.active) return;
+    if (!child.active) return;
 
-            child.angle += 1;
+    const frameName = child.frame?.name;
 
-            // Only create trails for object1 and object3
-            const frameName = child.frame?.name;
+    // Rotate only good objects
+    if (frameName === "object1" || frameName === "object3") {
+        child.angle += 1;
+    }
 
-            if (
-                (frameName === "object1" || frameName === "object3") &&
-                (!child.lastTrailTime || time - child.lastTrailTime > 30)
-            ) {
-                this.spawnTrail(child);
-                child.lastTrailTime = time;
-            }
+    if (
+        (frameName === "object1" || frameName === "object3") &&
+        (!child.lastTrailTime || time - child.lastTrailTime > 30)
+    ) {
+        this.spawnTrail(child);
+        child.lastTrailTime = time;
+    }
 
-            if (child.y > this.scale.height + 10) {
-                child.setActive(false).setVisible(false);
-            }
-        });
+    if (child.y > this.scale.height + 10) {
+        child.setActive(false).setVisible(false);
+    }
+});
+
     }
 
     spawnCatcherTrail() {
@@ -265,7 +268,36 @@ if (randomValue < 0.4) {
             .setVisible(true)
             .setVelocity(0, this.speed)
             .setTint(0xffffff)
-            .setDepth(1);
+            .setDepth(1)
+            .setAngle(0);
+
+
+            //ghost animation 
+
+            // After setting velocity and active status in spawnObject()
+if (objectFrame === 'object2') {
+    // Kill any existing tweens on this object first
+    this.tweens.killTweensOf(object);
+
+    // Reset alpha fully visible
+    object.setAlpha(1);
+
+    // Start pulsing tween
+    this.tweens.add({
+        targets: object,
+        alpha: { from: 0.4, to: 1 },
+        duration: 500,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut'
+    });
+} else {
+    // Kill any existing tweens and reset alpha for other objects
+    this.tweens.killTweensOf(object);
+    object.setAlpha(1);
+}
+
+
 
     // Apply different speed if it's object3 
     let fallSpeed = this.speed;
@@ -398,7 +430,7 @@ if (randomValue < 0.4) {
                     },
                 });
             },
-        });
+        }); 
     }
 }
 
