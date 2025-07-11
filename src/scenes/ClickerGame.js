@@ -123,7 +123,9 @@ this.timerEvent = this.time.addEvent({
     this.timeLeft--;
     this.timerText.setText(`Time: ${this.timeLeft}`);
 
-    if (this.timeLeft <= 0) {
+    if (this.timeLeft <= 10) { this.timerText.setColor('#ff4444') }
+
+  if (this.timeLeft <= 0) {
       this.timerEvent.remove();
       this.gameOver();
     }
