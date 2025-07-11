@@ -8,8 +8,21 @@ export class GameOver extends Scene {
     create() {
         this.add.image(322.5, 450, "gameover_bg");
 
+        const textStyle = {
+            fontFamily: "Arial Black",
+            fontSize: 44,
+            color: "#ffffff",
+            stroke: "#000000",
+            strokeThickness: 8,
+        };
+
         //  Get the current highscore from the registry
-        const score = this.registry.get("highscore");
+       const score = this.registry.get("score");
+       const highscore = this.registry.get("highscore");
+
+       
+//  this.add.text(this.scale.width / 2, 300, `Your Score: ${score}`, textStyle).setOrigin(0.5);
+
 
         const playAgainButton = this.add
             .text(this.scale.width / 2, 600, "Play Again", {
@@ -31,16 +44,10 @@ export class GameOver extends Scene {
             playAgainButton.setStyle({ backgroundColor: "#00aaff" })
         );
 
-        const textStyle = {
-            fontFamily: "Arial Black",
-            fontSize: 44,
-            color: "#ffffff",
-            stroke: "#000000",
-            strokeThickness: 8,
-        };
+        
 
         const gameOverText = this.add
-            .text(322, 450, `Game Over\n\nHigh Score: ${score}`, textStyle)
+            .text(322, 450, `Game Over\n\nHigh Score: ${highscore} \n\n Your Score: ${score}`, textStyle)
             .setAlign("center")
             .setOrigin(0.5);
 

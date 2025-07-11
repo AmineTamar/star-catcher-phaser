@@ -6,11 +6,11 @@ export class ClickerGame extends Scene {
     }
 
     create() {
+
+        this.add.image(322.5, 450, "background");
         this.score = 0;
 
-        this.trailCooldown = 0; // : throttle trail frequency
-
-        const textStyle = {
+          const textStyle = {
             fontFamily: "Arial Black",
             fontSize: 38,
             color: "#ffffff",
@@ -18,6 +18,17 @@ export class ClickerGame extends Scene {
             strokeThickness: 8,
         };
 
+
+        this.trailCooldown = 0; // : throttle trail frequency
+
+        this.timeLeft = this.registry.get('gameDuration');
+    
+
+        this.timerText = this.add.text(this.scale.width - 20, 16,`Time: ${this.timeLeft}`, textStyle).setOrigin(1,0).setDepth(10);
+
+     
+
+      
         this.ScoretextStyle = {
             fontFamily: "Arial Black",
             fontSize: "24px",
@@ -33,7 +44,7 @@ export class ClickerGame extends Scene {
             },
         };
 
-        this.add.image(322.5, 450, "background");
+        
 
         this.score = 0;
         this.scoreText = this.add
@@ -52,6 +63,20 @@ export class ClickerGame extends Scene {
         this.catcher.body.setAllowGravity(false);
         this.catcher.body.setCircle(20); //make it circular
         this.catcher.setVisible(false); // hide unless debugging
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // Track pointer state
         this.isPointerDown = false;
@@ -89,10 +114,25 @@ export class ClickerGame extends Scene {
             callbackScope: this,
         });
 
-        this.time.delayedCall(30000, () => {
-            // 30,000ms = 30 seconds
-            this.gameOver();
-        });
+      
+
+this.timerEvent = this.time.addEvent({
+  delay: 1000,
+  loop: true,
+  callback: () => {
+    this.timeLeft--;
+    this.timerText.setText(`Time: ${this.timeLeft}`);
+
+    if (this.timeLeft <= 0) {
+      this.timerEvent.remove();
+      this.gameOver();
+    }
+  },
+  callbackScope: this
+});
+
+
+
     }
 
     spawnTrail(target) {
@@ -167,6 +207,7 @@ export class ClickerGame extends Scene {
 
     gameOver() {
         const highscore = this.registry.get("highscore");
+         this.registry.set("score", this.score);
         if (this.score > highscore) {
             this.registry.set("highscore", this.score);
         }

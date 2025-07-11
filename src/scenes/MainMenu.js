@@ -8,6 +8,7 @@ export class MainMenu extends Scene {
     create() {
         //  Get the current highscore from the registry
         const score = this.registry.get("highscore");
+         const gameDuration = this.registry.get('gameDuration');
 
         const textStyle = {
             fontFamily: "Arial Black",
@@ -34,7 +35,7 @@ export class MainMenu extends Scene {
             .text(
                 322,
                 450,
-                `Click and Drag\nHow many can you catch in 30 seconds?`,
+                `Click and Drag\nHow many can you catch in ${gameDuration} seconds?`,
                 textStyle
             )
             .setAlign("center")
@@ -62,6 +63,11 @@ export class MainMenu extends Scene {
 
         startButton.on("pointerdown", () => {
             // Create a temporary background image for the fade effect
+
+
+            
+
+
 
             let fadeRect = this.add
                 .rectangle(

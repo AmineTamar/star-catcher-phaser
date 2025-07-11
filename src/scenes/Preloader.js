@@ -12,6 +12,10 @@ export class Preloader extends Scene {
 
     preload() {
         //  Load the assets for the game - Replace with the path to your own assets
+
+
+         
+
         this.load.setPath("assets");
         this.load.image("background", "background.png");
         this.load.image("gameover_bg", "gameover_bg.png");
@@ -22,13 +26,18 @@ export class Preloader extends Scene {
 
         this.load.atlas("object", "object.png", "sprite_sheet.json");
 
-        //this.load.atlas('coin', 'coin.png', 'coin.json');
+
+      
     }
 
     create() {
         //  When all the assets are loaded go to the next scene.
         //  We can go there immediately via: this.scene.start('MainMenu');
         //  Or we could use a Scene transition to fade between the two scenes:
+
+
+
+   this.registry.set('gameDuration', 15);  // Set the global game Timer in seconds
 
         this.scene.transition({
             target: "MainMenu",
