@@ -10,6 +10,11 @@ export class ClickerGame extends Scene {
         this.add.image(322.5, 450, "background");
         this.score = 0;
 
+this.object1Counter =0;
+this.object2Counter =0;
+ this.object3Counter =0;
+
+
           const textStyle = {
             fontFamily: "Arial Black",
             fontSize: 38,
@@ -214,6 +219,10 @@ this.timerEvent = this.time.addEvent({
             this.registry.set("highscore", this.score);
         }
 
+        this.registry.set('object1Counter',this.object1Counter);
+        this.registry.set('object2Counter',this.object2Counter);
+        this.registry.set('object3Counter',this.object3Counter);
+
        this.input.enabled = false;
 
     // Start fade-out effect
@@ -267,19 +276,23 @@ this.timerEvent = this.time.addEvent({
         let color = "#ffffff";
         let isGood = false;
 
+
         if (object.frame.name === "object1") {
             value = +1;
             color = "#ffff00";
             this.score += 1;
+            this.object1Counter++;
             isGood = true;
         } else if (object.frame.name === "object2") {
             value = -3;
             color = "#ff0000";
             this.score -= 3;
+            this.object2Counter++;
         } else if (object.frame.name === "object3") {
             value = +2;
             color = "#00ff00";
             this.score += 2;
+            this.object3Counter++;
             isGood = true;
         }
 
