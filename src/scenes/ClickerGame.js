@@ -273,7 +273,7 @@ this.timerEvent = this.time.addEvent({
             isGood = true;
         }
 
-        this.scoreText.setText("Objects: " + this.score);
+        this.scoreText.setText("Score: " + this.score);
 
         const floatingText = this.add
             .text(object.x, object.y, (value > 0 ? "+" : "") + value, {
