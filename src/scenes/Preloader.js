@@ -35,7 +35,19 @@ export class Preloader extends Scene {
         //  We can go there immediately via: this.scene.start('MainMenu');
         //  Or we could use a Scene transition to fade between the two scenes:
         
-           this.registry.set('gameDuration', 5);  // Set the global game Timer in seconds
+           this.registry.set('gameDuration', 30);  // Set the global game Timer in seconds
+
+
+           // Value / bonus for the each object /  isGood = true ==> good object
+
+           
+ this.registry.set("objectValues", {
+  object1: { value: 20, color: "#ffff00", isGood: true },
+  object2: { value: -33, color: "#ff0000", isGood: false },
+  object3: { value: 50, color: "#00ff00", isGood: true },
+});
+
+// transition
 
         this.scene.transition({
             target: "MainMenu",

@@ -110,7 +110,7 @@ this.object2Counter =0;
         this.catcher.body.enable = false;
 
         this.speed = 50;
-        this.spawnDelay = 480;
+        this.spawnDelay = 300;
 
         this.spawnTimer = this.time.addEvent({
             delay: this.spawnDelay,
@@ -235,7 +235,20 @@ this.timerEvent = this.time.addEvent({
     }
 
     spawnObject() {
-        const objectFrame = Phaser.Utils.Array.GetRandom(this.objectFrames);
+      
+
+        // Weighted random selection: object1 and object2 more common
+const randomValue = Math.random(); // value between 0 and 1
+let objectFrame;
+
+if (randomValue < 0.4) {
+    objectFrame = "object1"; // 40% chance
+} else if (randomValue < 0.8) {
+    objectFrame = "object2"; // 40% chance
+} else {
+    objectFrame = "object3"; // 20% chance
+}
+
 
         const object = this.objectGroup.getFirstDead(
             true,
@@ -243,6 +256,7 @@ this.timerEvent = this.time.addEvent({
             -20,
             "object"
         );
+
 
         object
             .setFrame(objectFrame)
@@ -253,7 +267,15 @@ this.timerEvent = this.time.addEvent({
             .setTint(0xffffff)
             .setDepth(1);
 
-        object.caught = false;
+    // Apply different speed if it's object3 
+    let fallSpeed = this.speed;
+    if (objectFrame === 'object3') {
+        fallSpeed += 250; // Increase speed only for object3
+    }
+
+    object.setVelocity(0, fallSpeed);
+
+    object.caught = false;
 
         // Increase difficulty
         this.speed = Math.min(this.speed + 3, 500);
@@ -269,117 +291,121 @@ this.timerEvent = this.time.addEvent({
     }
 
     catchObject(catcher, object) {
-        if (!object.active || object.caught) return;
-        object.caught = true;
+    if (!object.active || object.caught) return;
+    object.caught = true;
 
-        let value = 0;
-        let color = "#ffffff";
-        let isGood = false;
+    const objectValues = this.registry.get("objectValues");
+    const frameName = object.frame.name;
 
+    if (!objectValues[frameName]) return;
 
-        if (object.frame.name === "object1") {
-            value = +1;
-            color = "#ffff00";
-            this.score += 1;
+    const { value, color, isGood } = objectValues[frameName];
+    
+
+    this.score += value;
+
+    switch (frameName) {
+        case "object1":
             this.object1Counter++;
-            isGood = true;
-        } else if (object.frame.name === "object2") {
-            value = -3;
-            color = "#ff0000";
-            this.score -= 3;
+            break;
+        case "object2":
             this.object2Counter++;
-        } else if (object.frame.name === "object3") {
-            value = +2;
-            color = "#00ff00";
-            this.score += 2;
+            break;
+        case "object3":
             this.object3Counter++;
-            isGood = true;
-        }
-
-        this.scoreText.setText("Score: " + this.score);
-
-        const floatingText = this.add
-            .text(object.x, object.y, (value > 0 ? "+" : "") + value, {
-                font: "40px Arial",
-                fill: color,
-                stroke: "#000",
-                strokeThickness: 3,
-            })
-            .setOrigin(0.5)
-            .setDepth(2);
-
-        this.tweens.add({
-            targets: floatingText,
-            y: object.y - 40,
-            alpha: 0,
-            duration: 800,
-            ease: "Cubic.easeOut",
-            onComplete: () => floatingText.destroy(),
-        });
-
-        if (isGood) {
-            this.tweens.add({
-                targets: object,
-                x: this.scoreText.x,
-                y: this.scoreText.y,
-                scale: 0,
-                angle: 360,
-                duration: 600,
-                ease: "Cubic.easeIn",
-                onComplete: () => {
-                    this.scoreText.setStyle({
-                        ...this.ScoretextStyle,
-                        fill: "#00ff66",
-                    });
-                    this.tweens.add({
-                        targets: this.scoreText,
-                        scale: 1.2,
-                        duration: 100,
-                        yoyo: true,
-                        ease: "Sine.easeInOut",
-                    });
-                    this.time.delayedCall(200, () => {
-                        this.scoreText.setStyle(this.ScoretextStyle);
-                    });
-
-                    object
-                        .setActive(false)
-                        .setVisible(false)
-                        .setScale(0.3)
-                        .setAngle(0);
-                },
-            });
-        } else {
-            this.tweens.add({
-                targets: object,
-                x: object.x + 10,
-                yoyo: true,
-                repeat: 2,
-                duration: 50,
-                onComplete: () => {
-                    this.tweens.add({
-                        targets: object,
-                        scale: 0,
-                        duration: 100,
-                        ease: "Back.easeIn",
-                        onComplete: () => {
-                            this.scoreText.setStyle({
-                                ...this.ScoretextStyle,
-                                fill: "#ff4444",
-                            });
-                            this.time.delayedCall(200, () => {
-                                this.scoreText.setStyle(this.ScoretextStyle);
-                            });
-
-                            object
-                                .setActive(false)
-                                .setVisible(false)
-                                .setScale(0.3);
-                        },
-                    });
-                },
-            });
-        }
+            break;
     }
+
+    this.scoreText.setText("Score: " + this.score);
+
+    const floatingText = this.add
+        .text(object.x, object.y, (value > 0 ? "+" : "") + value, {
+            font: "40px Arial",
+            fill: color,
+            stroke: "#000",
+            strokeThickness: 3,
+        })
+        .setOrigin(0.5)
+        .setDepth(2);
+
+    this.tweens.add({
+        targets: floatingText,
+        y: object.y - 40,
+        alpha: 0,
+        duration: 800,
+        ease: "Cubic.easeOut",
+        onComplete: () => floatingText.destroy(),
+    });
+
+    if (isGood) {
+        this.tweens.add({
+            targets: object,
+            x: this.scoreText.x,
+            y: this.scoreText.y,
+            scale: 0,
+            angle: 360,
+            duration: 600,
+            ease: "Cubic.easeIn",
+            onComplete: () => {
+                this.scoreText.setStyle({
+                    ...this.ScoretextStyle,
+                    fill: "#00ff66",
+                });
+                this.tweens.add({
+                    targets: this.scoreText,
+                    scale: 1.2,
+                    duration: 100,
+                    yoyo: true,
+                    ease: "Sine.easeInOut",
+                });
+                this.time.delayedCall(200, () => {
+                    this.scoreText.setStyle(this.ScoretextStyle);
+                });
+
+                object
+                    .setActive(false)
+                    .setVisible(false)
+                    .setScale(0.3)
+                    .setAngle(0);
+            },
+        });
+    } else {
+        this.tweens.add({
+            targets: object,
+            x: object.x + 10,
+            yoyo: true,
+            repeat: 2,
+            duration: 50,
+            onComplete: () => {
+                this.tweens.add({
+                    targets: object,
+                    scale: 0,
+                    duration: 100,
+                    ease: "Back.easeIn",
+                    onComplete: () => {
+                        this.scoreText.setStyle({
+                            ...this.ScoretextStyle,
+                            fill: "#ff4444",
+                        });
+                        this.time.delayedCall(200, () => {
+                            this.scoreText.setStyle(this.ScoretextStyle);
+                        });
+
+                        object
+                            .setActive(false)
+                            .setVisible(false)
+                            .setScale(0.3);
+                    },
+                });
+            },
+        });
+    }
+}
+
+
+
+
+
+
 }
 

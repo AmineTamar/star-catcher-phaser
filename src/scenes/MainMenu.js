@@ -22,6 +22,65 @@ export class MainMenu extends Scene {
 
         const logo = this.add.image(322.5, -270, "logo").setScale(0.5);
 
+       const objectValues = this.registry.get("objectValues");
+
+
+
+
+        const spacingX = 160; // space between each object+text
+        const baseY = this.scale.height - 380; // distance from bottom
+        const startX = this.scale.width / 2 - spacingX; // first item centered left
+
+        // display result for objects caught
+        // Object 1
+        // Object 1
+        this.add
+            .image(startX, baseY, "object", "object1")
+            .setScale(0.3)
+            .setOrigin(0.5);
+        this.add
+            .text(startX + 40, baseY, `+${objectValues.object1.value}`, {
+                font: "24px Arial",
+                fill: "#ffff00",
+                stroke: "#000",
+                strokeThickness: 2,
+            })
+            .setOrigin(0, 0.5);
+
+        // Object 2
+        this.add
+            .image(startX + spacingX, baseY, "object", "object2")
+            .setScale(0.3)
+            .setOrigin(0.5);
+        this.add
+            .text(startX + spacingX + 40, baseY, ` ${objectValues.object2.value}`, {
+                font: "24px Arial",
+                fill: "#ff0000",
+                stroke: "#000",
+                strokeThickness: 2,
+            })
+            .setOrigin(0, 0.5);
+
+        // Object 3
+        this.add
+            .image(startX + spacingX * 2, baseY, "object", "object3")
+            .setScale(0.3)
+            .setOrigin(0.5);
+        this.add
+            .text(startX + spacingX * 2 + 40, baseY, `+${objectValues.object3.value}`, {
+                font: "24px Arial",
+                fill: "#00ff00",
+                stroke: "#000",
+                strokeThickness: 2,
+            })
+            .setOrigin(0, 0.5);
+
+
+
+
+
+        
+
         this.tweens.add({
             targets: logo,
             y: 270,
