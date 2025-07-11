@@ -34,10 +34,8 @@ export class Preloader extends Scene {
         //  When all the assets are loaded go to the next scene.
         //  We can go there immediately via: this.scene.start('MainMenu');
         //  Or we could use a Scene transition to fade between the two scenes:
-
-
-
-   this.registry.set('gameDuration', 15);  // Set the global game Timer in seconds
+        
+           this.registry.set('gameDuration', 5);  // Set the global game Timer in seconds
 
         this.scene.transition({
             target: "MainMenu",

@@ -212,7 +212,15 @@ this.timerEvent = this.time.addEvent({
             this.registry.set("highscore", this.score);
         }
 
-        this.scene.start("GameOver");
+       this.input.enabled = false;
+
+    // Start fade-out effect
+    this.cameras.main.fadeOut(1000, 0, 0, 0); // (duration, red, green, blue)
+
+    // Wait for fade to complete before changing scene
+    this.cameras.main.once('camerafadeoutcomplete', () => {
+        this.scene.start('GameOver');
+    });
     }
 
     spawnObject() {

@@ -67,8 +67,6 @@ export class MainMenu extends Scene {
 
             
 
-
-
             let fadeRect = this.add
                 .rectangle(
                     this.scale.width / 2,
