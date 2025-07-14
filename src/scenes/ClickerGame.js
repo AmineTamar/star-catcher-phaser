@@ -13,7 +13,7 @@ export class ClickerGame extends Scene {
         this.object2Counter = 0;
         this.object3Counter = 0;
 
-     const menuTexts = this.registry.get("menuTexts");
+        const menuTexts = this.registry.get("menuTexts");
 
         const textStyle = {
             fontFamily: "Arial Black",
@@ -25,6 +25,7 @@ export class ClickerGame extends Scene {
 
         this.trailCooldown = 0; // : throttle trail frequency
 
+        // Timer
         this.timeLeft = this.registry.get("gameDuration");
 
         this.timerText = this.add
@@ -37,6 +38,7 @@ export class ClickerGame extends Scene {
             .setOrigin(1, 0)
             .setDepth(10);
 
+        //Score text
         this.ScoretextStyle = {
             fontFamily: "Arial Black",
             fontSize: "24px",
@@ -70,8 +72,6 @@ export class ClickerGame extends Scene {
         this.catcher.body.setCircle(20); //make it circular
         this.catcher.setVisible(false); // hide unless debugging
 
-        
-
         // Track pointer state
         this.isPointerDown = false;
 
@@ -80,16 +80,12 @@ export class ClickerGame extends Scene {
             this.catcher.setVisible(true);
             this.catcher.setPosition(pointer.x, pointer.y);
             this.catcher.body.enable = true;
-
-        
         });
 
         this.input.on("pointerup", () => {
             this.isPointerDown = false;
             this.catcher.setVisible(false);
             this.catcher.body.enable = false; //  DISABLE physics body
-
-            
         });
 
         this.physics.add.overlap(
@@ -117,7 +113,9 @@ export class ClickerGame extends Scene {
             loop: true,
             callback: () => {
                 this.timeLeft--;
-                this.timerText.setText(`${menuTexts.timeLabel}: ${this.timeLeft}`);
+                this.timerText.setText(
+                    `${menuTexts.timeLabel}: ${this.timeLeft}`
+                );
 
                 if (this.timeLeft <= 10) {
                     this.timerText.setColor("#ff4444");
@@ -132,6 +130,7 @@ export class ClickerGame extends Scene {
         });
     }
 
+    // star trail partical
     spawnTrail(target) {
         const trail = this.add
             .image(target.x, target.y, "trail")
@@ -150,6 +149,8 @@ export class ClickerGame extends Scene {
         });
     }
 
+    //update function
+
     update(time, delta) {
         const floatAmplitude = 0.5; // pixels / ghost floating
         const floatFrequency = 0.005; // speed of Ghost drifting
@@ -157,14 +158,12 @@ export class ClickerGame extends Scene {
         if (this.isPointerDown) {
             const pointer = this.input.activePointer;
             this.catcher.setPosition(pointer.x, pointer.y);
-           
 
-          
             // Add glow trail effect every 5ms
             if (!this.lastGlowTime || time - this.lastGlowTime > 20) {
                 this.spawnCatcherTrail();
                 this.lastGlowTime = time;
-            } 
+            }
         }
 
         this.objectGroup.getChildren().forEach((child) => {
@@ -200,14 +199,20 @@ export class ClickerGame extends Scene {
         });
     }
 
+    //Catcher partical effect
+
     spawnCatcherTrail() {
         const trail = this.add
-            .image(this.catcher.x+Phaser.Math.RND.between(5,30), this.catcher.y+Phaser.Math.RND.between(5,30), "glow")
+            .image(
+                this.catcher.x + Phaser.Math.RND.between(5, 30),
+                this.catcher.y + Phaser.Math.RND.between(5, 30),
+                "glow"
+            )
             .setAlpha(0.8)
             .setScale(Phaser.Math.RND.between(0.2, 8) / 10)
             .setDepth(5)
             .setBlendMode("ADD");
-            //.setTint(Phaser.Display.Color.RandomRGB().color);
+        //.setTint(Phaser.Display.Color.RandomRGB().color);
 
         this.tweens.add({
             targets: trail,
@@ -216,19 +221,18 @@ export class ClickerGame extends Scene {
             duration: 800,
             onComplete: () => trail.destroy(),
         });
-    } 
-
-    gameOver() {
-      
-        const highscore = this.registry.get("highscore");
-    this.registry.set("score", this.score);
-    if (this.score > highscore) {
-        this.registry.set("highscore", this.score);
-        // Save to localStorage
-        localStorage.setItem("gameHighscore", this.score.toString());
     }
 
-        
+    //Gameover logic
+
+    gameOver() {
+        const highscore = this.registry.get("highscore");
+        this.registry.set("score", this.score);
+        if (this.score > highscore) {
+            this.registry.set("highscore", this.score);
+            // Save to localStorage
+            localStorage.setItem("gameHighscore", this.score.toString());
+        }
 
         this.registry.set("object1Counter", this.object1Counter);
         this.registry.set("object2Counter", this.object2Counter);
@@ -245,6 +249,7 @@ export class ClickerGame extends Scene {
         });
     }
 
+    //object spanw logic
     spawnObject() {
         // Weighted random selection: object1 and object2 more common
         const randomValue = Math.random(); // value between 0 and 1

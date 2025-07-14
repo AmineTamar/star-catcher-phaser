@@ -9,7 +9,7 @@ export class GameOver extends Scene {
         this.add.image(322.5, 450, "gameover_bg");
 
 
-        const gameOverLabels = this.registry.get("gameOverLabels");
+        const gameOverLabels = this.registry.get("gameOverLabels"); // Gameover labels and texts 
 
        
 
