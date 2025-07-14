@@ -8,6 +8,11 @@ export class GameOver extends Scene {
     create() {
         this.add.image(322.5, 450, "gameover_bg");
 
+
+        const gameOverLabels = this.registry.get("gameOverLabels");
+
+       
+
         const textStyle = {
             fontFamily: "Arial Black",
             fontSize: 44,
@@ -79,17 +84,17 @@ export class GameOver extends Scene {
 
 
 
-        const playAgainButton = this.add
-            .text(this.scale.width / 2, 600, "Play Again", {
-                fontSize: "32px",
-                color: "#000",
-                backgroundColor: "#00aaff", // Sky blue
-                padding: { x: 30, y: 15 },
-                align: "center",
-                fontStyle: "bold",
-            })
-            .setOrigin(0.5)
-            .setInteractive();
+       const playAgainButton = this.add
+    .text(this.scale.width / 2, 600, gameOverLabels.playAgainLabel, {
+        fontSize: "32px",
+        color: "#000",
+        backgroundColor: "#00aaff",
+        padding: { x: 30, y: 15 },
+        align: "center",
+        fontStyle: "bold",
+    })
+    .setOrigin(0.5)
+    .setInteractive();
 
         //  hover effect
         playAgainButton.on("pointerover", () =>
@@ -100,14 +105,15 @@ export class GameOver extends Scene {
         );
 
         const gameOverText = this.add
-            .text(
-                322,
-                450,
-                `Game Over\n\nHigh Score: ${highscore} \n\n Your Score: ${score}`,
-                textStyle
-            )
-            .setAlign("center")
-            .setOrigin(0.5);
+    .text(
+        322,
+        450,
+        gameOverLabels.gameOverMessage(highscore, score),
+        textStyle
+    )
+    .setAlign("center")
+    .setOrigin(0.5);
+
 
         this.tweens.add({
             targets: [gameOverText],

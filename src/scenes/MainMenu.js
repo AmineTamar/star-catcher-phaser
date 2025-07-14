@@ -6,9 +6,11 @@ export class MainMenu extends Scene {
     }
 
     create() {
+        const menuTexts = this.registry.get("menuTexts");
+
         //  Get the current highscore from the registry
         const score = this.registry.get("highscore");
-         const gameDuration = this.registry.get('gameDuration');
+        const gameDuration = this.registry.get("gameDuration");
 
         const textStyle = {
             fontFamily: "Arial Black",
@@ -20,12 +22,9 @@ export class MainMenu extends Scene {
 
         this.add.image(322.5, 450, "background");
 
-        const logo = this.add.image(322.5, -270, "logo").setScale(0.5);
+        const logo = this.add.image(322.5, -270, "logo").setScale(1);
 
-       const objectValues = this.registry.get("objectValues");
-
-
-
+        const objectValues = this.registry.get("objectValues");
 
         const spacingX = 160; // space between each object+text
         const baseY = this.scale.height - 380; // distance from bottom
@@ -53,12 +52,17 @@ export class MainMenu extends Scene {
             .setScale(0.3)
             .setOrigin(0.5);
         this.add
-            .text(startX + spacingX + 40, baseY, ` ${objectValues.object2.value}`, {
-                font: "24px Arial",
-                fill: "#ff0000",
-                stroke: "#000",
-                strokeThickness: 2,
-            })
+            .text(
+                startX + spacingX + 40,
+                baseY,
+                ` ${objectValues.object2.value}`,
+                {
+                    font: "24px Arial",
+                    fill: "#ff0000",
+                    stroke: "#000",
+                    strokeThickness: 2,
+                }
+            )
             .setOrigin(0, 0.5);
 
         // Object 3
@@ -67,19 +71,18 @@ export class MainMenu extends Scene {
             .setScale(0.3)
             .setOrigin(0.5);
         this.add
-            .text(startX + spacingX * 2 + 40, baseY, `+${objectValues.object3.value}`, {
-                font: "24px Arial",
-                fill: "#00ff00",
-                stroke: "#000",
-                strokeThickness: 2,
-            })
+            .text(
+                startX + spacingX * 2 + 40,
+                baseY,
+                `+${objectValues.object3.value}`,
+                {
+                    font: "24px Arial",
+                    fill: "#00ff00",
+                    stroke: "#000",
+                    strokeThickness: 2,
+                }
+            )
             .setOrigin(0, 0.5);
-
-
-
-
-
-        
 
         this.tweens.add({
             targets: logo,
@@ -88,23 +91,30 @@ export class MainMenu extends Scene {
             ease: "Bounce.easeOut",
         });
 
-        this.add.text(32, 32, `High Score: ${score}`, textStyle);
+        this.add.text(
+            32,
+            32,
+            `${menuTexts.highScoreLabel}: ${score}`,
+            textStyle
+        );
+
+        // Instruction text Menu
+        const instructionsText = menuTexts.instructions.replace(
+            "{{duration}}",
+            gameDuration
+        );
 
         const instructions = this.add
-            .text(
-                322,
-                450,
-                `Click and Drag\nHow many can you catch in ${gameDuration} seconds?`,
-                textStyle
-            )
+            .text(322, 450, instructionsText, textStyle)
             .setAlign("center")
             .setOrigin(0.5);
 
+        //Start Button
         const startButton = this.add
-            .text(this.scale.width / 2, 600, "Start Game", {
+            .text(this.scale.width / 2, 600, menuTexts.startButton, {
                 fontSize: "32px",
                 color: "#000",
-                backgroundColor: "#00aaff", // Sky blue
+                backgroundColor: "#00aaff",
                 padding: { x: 30, y: 15 },
                 align: "center",
                 fontStyle: "bold",
@@ -112,7 +122,7 @@ export class MainMenu extends Scene {
             .setOrigin(0.5)
             .setInteractive();
 
-        // Optional hover effect
+        // Start Button hover effect
         startButton.on("pointerover", () =>
             startButton.setStyle({ backgroundColor: "#33ccff" })
         );
@@ -122,9 +132,6 @@ export class MainMenu extends Scene {
 
         startButton.on("pointerdown", () => {
             // Create a temporary background image for the fade effect
-
-
-            
 
             let fadeRect = this.add
                 .rectangle(
